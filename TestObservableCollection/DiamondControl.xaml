@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="TestObservableCollection.DiamondControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TestObservableCollection"
+             xmlns:AttachedBehaviors="clr-namespace:TestObservableCollection.AttachedBehaviors"
+             xmlns:SystemWindows="clr-namespace:System.Windows;assembly=PresentationCore"
+             xmlns:SystemWindowsMediaAnimation="clr-namespace:System.Windows.Media.Animation;assembly=PresentationCore"
+             xmlns:Interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="30">
+   <Grid>
+      <Grid.Resources>
+         <ResourceDictionary>
+            <SystemWindowsMediaAnimation:KeyTime x:Key="KeyTime_IndicatorStateChangeTime">0:0:0.1</SystemWindowsMediaAnimation:KeyTime>
+            <SystemWindows:Duration x:Key="Duration_IndicatorStateChangeTime">0:0:0.1</SystemWindows:Duration>
+            <SystemWindows:Duration x:Key="Duration_ActiveIndicatorStateChangeRotateTime">0:0:0.3</SystemWindows:Duration>
+            <SystemWindows:Duration x:Key="Duration_ActiveIndicatorStateChangeScaleTime">0:0:0.4</SystemWindows:Duration>
+            <Color x:Key="NonActiveDiamondColor">#6A869F</Color>
+            <SolidColorBrush x:Key="NonActiveDiamondBrush"
+                             Color="{StaticResource NonActiveDiamondColor}" />
+         </ResourceDictionary>
+      </Grid.Resources>
+      <Grid x:Name="diamondIndicator"
+            RenderTransformOrigin="0.5,0.5">
+         <Grid.RenderTransform>
+            <TransformGroup>
+               <RotateTransform x:Name="PathRotateTransform"
+                                Angle="0" />
+               <ScaleTransform x:Name="PathScaleTransform" />
+            </TransformGroup>
+         </Grid.RenderTransform>
+         <Path x:Name="diamondPath"
+               Data="M50,0L100,50 50,100 0,50z"
+               Stretch="Fill"
+               Stroke="Transparent"
+               StrokeThickness="1"
+               Fill="{Binding MyBrush, Mode=OneWay}"
+               Margin="0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top">
+         </Path>
+         <Image Source="{Binding CursorImageBitmap, Mode=OneWay}" Margin="15" />
+      </Grid>
+      <VisualStateManager.VisualStateGroups>
+         <VisualStateGroup x:Name="CursorIndicatorDiamondTypeStates">
+            <VisualState x:Name="CursorIndicatorDiamondTypeGoingToBeReplacedDiamond">
+               <Storyboard>
+                  <DoubleAnimation Storyboard.TargetName="diamondIndicator"
+                                   Storyboard.TargetProperty="Opacity"
+                                   To="0.7"
+                                   Duration="{StaticResource Duration_IndicatorStateChangeTime}" />
+                  <DoubleAnimationUsingKeyFrames Storyboard.TargetName="PathRotateTransform"
+                                                 Storyboard.TargetProperty="(RotateTransform.Angle)"
+                                                 RepeatBehavior="Forever"
+                                                 Duration="0:0:1">
+                     <EasingDoubleKeyFrame KeyTime="0:0:0.2"
+                                           Value="-12.0" />
+                     <EasingDoubleKeyFrame KeyTime="0:0:0.4"
+                                           Value="12.0" />
+                     <EasingDoubleKeyFrame KeyTime="0:0:0.5"
+                                           Value="0" />
+                  </DoubleAnimationUsingKeyFrames>
+               </Storyboard>
+            </VisualState>
+         </VisualStateGroup>
+      </VisualStateManager.VisualStateGroups>
+
+      <Interactivity:Interaction.Behaviors>
+         <AttachedBehaviors:VisualStateEnumBindingBehavior EnumCondition="{Binding CursorIndicatorDiamond}" />
+      </Interactivity:Interaction.Behaviors>
+   </Grid>
+</UserControl>
