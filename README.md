@@ -1,0 +1,2 @@
+# TestObservableCollectionPerformance
+Testing Performance With ItemsControl
