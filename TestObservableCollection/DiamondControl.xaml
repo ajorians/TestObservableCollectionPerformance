@@ -10,7 +10,10 @@
              xmlns:Interactivity="http://schemas.microsoft.com/expression/2010/interactivity"
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="30">
-   <Grid>
+   <UserControl.Resources>
+      <BooleanToVisibilityConverter x:Key="BoolToVis" />
+   </UserControl.Resources>
+   <Grid Visibility="{Binding IsVisible, Mode=OneWay, Converter={StaticResource BoolToVis} }">
       <Grid.Resources>
          <ResourceDictionary>
             <SystemWindowsMediaAnimation:KeyTime x:Key="KeyTime_IndicatorStateChangeTime">0:0:0.1</SystemWindowsMediaAnimation:KeyTime>
