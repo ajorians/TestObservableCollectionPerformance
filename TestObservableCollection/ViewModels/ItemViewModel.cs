@@ -16,10 +16,11 @@ namespace TestObservableCollection.ViewModels
 
    public class ItemViewModel : INotifyPropertyChanged
    {
-      public ItemViewModel(double frame, BitmapSource cursorImageBitmap, byte r, byte g, byte b )
+      public ItemViewModel(double frame, BitmapSource cursorImageBitmap, bool visible, byte r, byte g, byte b )
       {
          _keyframeFrame = frame;
          _cursorImageBitmap = cursorImageBitmap;
+         _isVisible = visible;
          MyBrush = new SolidColorBrush(new Color() { R = r, G = g, B = b, A = 255 } );
       }
 
@@ -43,6 +44,20 @@ namespace TestObservableCollection.ViewModels
       public double KeyframeFrame
       {
          get => _keyframeFrame;
+      }
+
+      private bool _isVisible = true;
+      public bool IsVisible
+      {
+         get => _isVisible;
+         set
+         {
+            if ( value == _isVisible )
+               return;
+
+            _isVisible = value;
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( nameof( IsVisible ) ) );
+         }
       }
 
       //private double _zoomLevel = 1;

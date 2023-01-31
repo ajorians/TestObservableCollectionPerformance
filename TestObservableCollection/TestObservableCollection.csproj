@@ -66,6 +66,7 @@
       <DependentUpon>DiamondControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="ObservableRangeCollection.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\VM.cs" />
     <Page Include="DiamondControl.xaml">

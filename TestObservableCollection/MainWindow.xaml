@@ -43,6 +43,15 @@
                     Value="{Binding IndicatorSize, Mode=TwoWay}"
                     Width="200" />
          </StackPanel>
+         <StackPanel Orientation="Horizontal">
+            <Label Content="Show every N-th one:" />
+            <TextBox Text="{Binding ShowNumber, Mode=TwoWay}"
+                     Width="70" />
+            <Slider Minimum="1"
+                    Maximum="100"
+                    Value="{Binding ShowNumber, Mode=TwoWay}"
+                    Width="200" />
+         </StackPanel>
       </StackPanel>
       <ItemsControl Grid.Row="1"
                     ItemsSource="{Binding Items}"

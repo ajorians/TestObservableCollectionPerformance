@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using TestObservableCollectionVsDrawing;
 
 namespace TestObservableCollection.ViewModels
 {
@@ -44,6 +45,28 @@ namespace TestObservableCollection.ViewModels
          }
       }
 
+      private int _showNumber = 1;
+      public int ShowNumber
+      {
+         get => _showNumber;
+         set
+         {
+            if ( value == _showNumber )
+               return;
+
+            _showNumber = value;
+
+            int numItems = FullListOfItems.Count;
+            for ( int i=0; i< numItems; i++ )
+            {
+               FullListOfItems[i].IsVisible = (i % _showNumber) == 0;
+            }
+            SyncUpItems();
+
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( nameof( ShowNumber ) ) );
+         }
+      }
+
       private int _numIndicators = 0;
       public int NumIndicators
       {
@@ -54,28 +77,41 @@ namespace TestObservableCollection.ViewModels
                return;
 
             _numIndicators = value;
-            _items.Clear();
+
+            var image = new BitmapImage( new Uri( "pack://application:,,,/Images/test1.png" ) );
+
+            FullListOfItems.Clear();
+
             for ( int i = 0; i < _numIndicators; i++ )
             {
                double position = i* 40;
                byte b = (byte)( i*5 );
 
-               var image = new BitmapImage( new Uri( "pack://application:,,,/Images/test1.png" ) );
+               //var image = new BitmapImage( new Uri( "pack://application:,,,/Images/test1.png" ) );
 
-               _items.Add( new ItemViewModel( position, image, 255, 0, b) );
+               bool isVisible = (i%ShowNumber)==0;
+               FullListOfItems.Add( new ItemViewModel( position, image, isVisible, 255, 0, b) );
             }
 
-            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( nameof( Items ) ) );
+            SyncUpItems();
             PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( nameof( NumIndicators ) ) );
          }
       }
 
-      private ObservableCollection<ItemViewModel> _items = new ObservableCollection<ItemViewModel>();
-
-      public ObservableCollection<ItemViewModel> Items
+      private void SyncUpItems()
       {
-         get => _items;
+         var onlyVisibleItems = FullListOfItems.Where( item => item.IsVisible ).ToList();
+
+         Items.Clear();
+         Items.AddRange( onlyVisibleItems );
       }
+
+      private List<ItemViewModel> FullListOfItems = new List<ItemViewModel>();
+
+      public ObservableRangeCollection<ItemViewModel> Items
+      {
+         get;
+      } = new ObservableRangeCollection<ItemViewModel>();
 
       public event PropertyChangedEventHandler PropertyChanged;
    }
