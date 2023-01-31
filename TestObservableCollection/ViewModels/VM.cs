@@ -56,11 +56,12 @@ namespace TestObservableCollection.ViewModels
 
             _showNumber = value;
 
-            int numItems = Items.Count;
+            int numItems = FullListOfItems.Count;
             for ( int i=0; i< numItems; i++ )
             {
-               Items[i].IsVisible = (i % _showNumber) == 0;
+               FullListOfItems[i].IsVisible = (i % _showNumber) == 0;
             }
+            SyncUpItems();
 
             PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( nameof( ShowNumber ) ) );
          }
@@ -76,11 +77,10 @@ namespace TestObservableCollection.ViewModels
                return;
 
             _numIndicators = value;
-            _items.Clear();
 
             var image = new BitmapImage( new Uri( "pack://application:,,,/Images/test1.png" ) );
 
-            List<ItemViewModel> newItems = new List<ItemViewModel>( _numIndicators );
+            FullListOfItems.Clear();
 
             for ( int i = 0; i < _numIndicators; i++ )
             {
@@ -90,20 +90,28 @@ namespace TestObservableCollection.ViewModels
                //var image = new BitmapImage( new Uri( "pack://application:,,,/Images/test1.png" ) );
 
                bool isVisible = (i%ShowNumber)==0;
-               newItems.Add( new ItemViewModel( position, image, isVisible, 255, 0, b) );
+               FullListOfItems.Add( new ItemViewModel( position, image, isVisible, 255, 0, b) );
             }
 
-            Items.AddRange( newItems );
+            SyncUpItems();
             PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( nameof( NumIndicators ) ) );
          }
       }
 
-      private ObservableRangeCollection<ItemViewModel> _items = new ObservableRangeCollection<ItemViewModel>();
+      private void SyncUpItems()
+      {
+         var onlyVisibleItems = FullListOfItems.Where( item => item.IsVisible ).ToList();
+
+         Items.Clear();
+         Items.AddRange( onlyVisibleItems );
+      }
+
+      private List<ItemViewModel> FullListOfItems = new List<ItemViewModel>();
 
       public ObservableRangeCollection<ItemViewModel> Items
       {
-         get => _items;
-      }
+         get;
+      } = new ObservableRangeCollection<ItemViewModel>();
 
       public event PropertyChangedEventHandler PropertyChanged;
    }
