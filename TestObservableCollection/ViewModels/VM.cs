@@ -67,6 +67,29 @@ namespace TestObservableCollection.ViewModels
          }
       }
 
+      private int _imageChoice = 1;
+      public int ImageChoice
+      {
+         get => _imageChoice;
+         set
+         {
+            if ( value == _imageChoice )
+               return;
+
+            _imageChoice = value;
+
+            int numItems = FullListOfItems.Count;
+            for ( int i = 0; i < numItems; i++ )
+            {
+               var image = new BitmapImage( new Uri( $"pack://application:,,,/Images/test{_imageChoice}.png" ) );
+
+               FullListOfItems[i].CursorImageBitmap = image;
+            }
+
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( nameof( ImageChoice ) ) );
+         }
+      }
+
       private int _numIndicators = 0;
       public int NumIndicators
       {

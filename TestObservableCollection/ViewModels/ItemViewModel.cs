@@ -36,6 +36,15 @@ namespace TestObservableCollection.ViewModels
       public BitmapSource CursorImageBitmap
       {
          get => _cursorImageBitmap;
+         set
+         {
+            if ( value == _cursorImageBitmap )
+               return;
+
+            _cursorImageBitmap = value;
+
+            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( nameof( CursorImageBitmap ) ) );
+         }
       }
 
       public Brush MyBrush { get; }

@@ -52,6 +52,15 @@
                     Value="{Binding ShowNumber, Mode=TwoWay}"
                     Width="200" />
          </StackPanel>
+         <StackPanel Orientation="Horizontal">
+            <Label Content="Image:" />
+            <TextBox Text="{Binding ImageChoice, Mode=TwoWay}"
+                     Width="70" />
+            <Slider Minimum="1"
+                    Maximum="3"
+                    Value="{Binding ImageChoice, Mode=TwoWay}"
+                    Width="200" />
+         </StackPanel>
       </StackPanel>
       <ItemsControl Grid.Row="1"
                     ItemsSource="{Binding Items}"
