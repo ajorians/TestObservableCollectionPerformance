@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
+using TestObservableCollectionVsDrawing;
 
 namespace TestObservableCollection.ViewModels
 {
@@ -79,6 +80,8 @@ namespace TestObservableCollection.ViewModels
 
             var image = new BitmapImage( new Uri( "pack://application:,,,/Images/test1.png" ) );
 
+            List<ItemViewModel> newItems = new List<ItemViewModel>( _numIndicators );
+
             for ( int i = 0; i < _numIndicators; i++ )
             {
                double position = i* 40;
@@ -87,17 +90,17 @@ namespace TestObservableCollection.ViewModels
                //var image = new BitmapImage( new Uri( "pack://application:,,,/Images/test1.png" ) );
 
                bool isVisible = (i%ShowNumber)==0;
-               _items.Add( new ItemViewModel( position, image, isVisible, 255, 0, b) );
+               newItems.Add( new ItemViewModel( position, image, isVisible, 255, 0, b) );
             }
 
-            PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( nameof( Items ) ) );
+            Items.AddRange( newItems );
             PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( nameof( NumIndicators ) ) );
          }
       }
 
-      private ObservableCollection<ItemViewModel> _items = new ObservableCollection<ItemViewModel>();
+      private ObservableRangeCollection<ItemViewModel> _items = new ObservableRangeCollection<ItemViewModel>();
 
-      public ObservableCollection<ItemViewModel> Items
+      public ObservableRangeCollection<ItemViewModel> Items
       {
          get => _items;
       }
